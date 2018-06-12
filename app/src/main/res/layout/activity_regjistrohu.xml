@@ -7,7 +7,11 @@
     android:padding="10dp"
     android:background="@drawable/background1"
     tools:context=".Regjistrohu">
-
+<LinearLayout
+    android:id="@+id/Liner"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
     <TextView
         android:id="@+id/Emri"
         android:layout_width="match_parent"
@@ -47,25 +51,7 @@
         android:ems="10"
         android:inputType="textPersonName"
          />
-    <TextView
-    android:id="@+id/Age"
-    android:layout_width="match_parent"
-    android:layout_height="20dp"
-    android:layout_alignParentLeft="true"
-    android:layout_alignParentStart="true"
-    android:layout_below="@+id/editMbiemri"
-    android:hint="@string/Age"
-    android:text="@string/Age" />
-    <EditText
-        android:id="@+id/editAge"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/Age"
-        android:ems="10"
-        android:inputType="textPersonName"
-        />
+
     <TextView
         android:id="@+id/perdoruesi"
         android:layout_width="match_parent"
@@ -76,7 +62,7 @@
         android:hint="@string/Perdoruesi"
         android:text="@string/Perdoruesi" />
     <EditText
-        android:id="@+id/editperdoruesi"
+        android:id="@+id/editPerdoruesi"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentStart="true"
@@ -86,21 +72,21 @@
         android:inputType="textPersonName"
         />
     <TextView
-        android:id="@+id/Fjalkalimi"
+        android:id="@+id/Fjalekalimi"
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/editperdoruesi"
+        android:layout_below="@+id/editPerdoruesi"
         android:hint="@string/Fjalekalimi"
         android:text="@string/Fjalekalimi" />
     <EditText
-        android:id="@+id/editfjalekalimi"
+        android:id="@+id/editFjalekalimi"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/Fjalkalimi"
+        android:layout_below="@+id/Fjalekalimi"
         android:ems="10"
         android:inputType="textPersonName"
         />
@@ -113,4 +99,5 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="92dp"
         android:text="Regjistrohu" />
+</LinearLayout>
 </RelativeLayout>
