@@ -28,10 +28,10 @@
         app:srcCompat="@drawable/images" />
 
     <EditText
-        android:id="@+id/perdoruesi"
+        android:id="@+id/editPerdoruesi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/Fjalkalimi"
+        android:layout_above="@+id/editFjalekalimi"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="-218dp"
         android:drawableLeft="@drawable/ic_action_perdoruesi"
@@ -41,7 +41,7 @@
         android:text="Perdoruesi" />
 
     <EditText
-        android:id="@+id/Fjalkalimi"
+        android:id="@+id/editFjalekalimi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"

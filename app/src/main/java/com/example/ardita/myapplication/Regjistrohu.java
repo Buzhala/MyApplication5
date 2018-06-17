@@ -25,7 +25,7 @@ import java.util.Map;
 
 public class Regjistrohu extends AppCompatActivity implements View.OnClickListener {
 
-     Button Regjistrohu;
+    private Button Regjistrohu;
      private EditText editEmri, editMbiemri, editPerdoruesi, editFjalekalimi;
      private ProgressDialog progressDialog;
 
@@ -44,19 +44,19 @@ public class Regjistrohu extends AppCompatActivity implements View.OnClickListen
     }
 
     private void registerUser(){
-final String Emri = editEmri.getText().toString().trim();
+        final String Emri = editEmri.getText().toString().trim();
         final String Mbiemri = editMbiemri.getText().toString().trim();
         final String Perdoruesi = editPerdoruesi.getText().toString().trim();
         final String Fjalekalimi = editFjalekalimi.getText().toString().trim();
         progressDialog.setMessage("Duke regjistruar perdoruesin...");
         progressDialog.show();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 Constants.URL_REGISTER,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         progressDialog.dismiss();
-                        try {
+                       try {
                             JSONObject jsonObject = new JSONObject(response);
 
                             Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
@@ -67,14 +67,14 @@ final String Emri = editEmri.getText().toString().trim();
                 },
                 new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
+                    public void onErrorResponse(VolleyError error){
         progressDialog.hide();
-                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                       Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
+                Map<String,String> params = new HashMap<>();
                 params.put("Emri", Emri);
                 params.put("Mbiemri", Mbiemri);
                 params.put("Perdoruesi", Perdoruesi);
