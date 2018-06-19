@@ -75,10 +75,10 @@ public class Regjistrohu extends AppCompatActivity implements View.OnClickListen
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String> params = new HashMap<>();
-                params.put("Emri", Emri);
-                params.put("Mbiemri", Mbiemri);
-                params.put("Perdoruesi", Perdoruesi);
-                params.put("Fjalekalimi", Fjalekalimi);
+                params.put("emri", Emri);
+                params.put("mbiemri", Mbiemri);
+                params.put("perdoruesi", Perdoruesi);
+                params.put("fjalekalimi", Fjalekalimi);
                 return params;
 
             }

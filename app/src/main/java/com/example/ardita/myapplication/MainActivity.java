@@ -15,9 +15,11 @@ import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,10 +69,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             JSONObject obj =  new JSONObject(response);
                             if(!obj.getBoolean("error")){
                                 ConstantsLogin.getInstance(getApplicationContext()).userLogin(
-                                        obj.getInt("ID"),
-                                        obj.getString("Emri"),
-                                        obj.getString("Mbiemri"),
-                                        obj.getString("Perdoruesi")
+                                        obj.getInt("id"),
+                                        obj.getString("emri"),
+                                        obj.getString("mbiemri"),
+                                        obj.getString("perdoruesi")
                                 );
                                 Toast.makeText(getApplicationContext(), "Perdoruesi u kyq me sukses", Toast.LENGTH_LONG).show();
                             }else {
@@ -93,11 +95,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("Perdoruesi", Perdoruesi);
-                params.put("Fjalekalimi", Fjalekalimi);
+                params.put("perdoruesi", Perdoruesi);
+                params.put("fjalekalimi", Fjalekalimi);
                 return params;
             }
         };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+        startActivity(new Intent(this, kyqu.class));
 
     }
 
@@ -105,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         if(view == Kyqu)
             userLogin();
+
 
             if (view == Regjistrohu)
                 startActivity(new Intent(this, Regjistrohu.class));

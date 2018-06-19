@@ -21,16 +21,34 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.view.View.OnClickListener;
 import android.widget.*;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class kyqu extends AppCompatActivity implements AdapterView.OnItemSelectedListener, OnClickListener {
 
-    String[] Drejtimi = { "Shkenca natyrore", "Shkenca shoqerore", "Mjeksia", "Shkolla teknike" };
+    String[] Drejtimi;
+    String[][] drejtimet;
     CheckBox matematike,fizike,biologji,gjuheshqipe,gjuheangleze,kimi;
     Button vazhdo;
- private DrawerLayout Drawer;
- private ActionBarDrawerToggle Toggle;
+    private DrawerLayout Drawer;
+    private ActionBarDrawerToggle Toggle;
+
+//    public kyqu() {
+//        getDrejtimet();
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getDrejtimet();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kyqu);
 
@@ -144,5 +162,40 @@ public class kyqu extends AppCompatActivity implements AdapterView.OnItemSelecte
                 startActivity(new Intent(this, info.class));
                 break;
         }
+    }
+
+    private void getDrejtimet(){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                Constants.URL_DREJTIMET, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                try {
+//                  JSONObject obj =  new JSONObject(response);
+                    JSONArray jsonArray = new JSONArray(response);
+                    String[][] d = new String[jsonArray.length()][2];
+                    String[] dd = new String[jsonArray.length()];
+
+                    for(int i=0; i<jsonArray.length(); i++){
+                        d[i][0]= (String) jsonArray.getJSONObject(i).get("id");
+                        d[i][1]= (String) jsonArray.getJSONObject(i).get("drejtimi");
+                        dd[i]= (String) jsonArray.getJSONObject(i).get("drejtimi");
+                    }
+                    Drejtimi=dd;
+                    drejtimet = d;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        },
+        new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+        });
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 }
