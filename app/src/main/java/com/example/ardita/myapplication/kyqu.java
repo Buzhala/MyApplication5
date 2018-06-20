@@ -33,22 +33,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class kyqu extends AppCompatActivity implements AdapterView.OnItemSelectedListener, OnClickListener {
+public class kyqu extends AppCompatActivity implements AdapterView.OnItemSelectedListener, OnClickListener, NavigationView.OnNavigationItemSelectedListener{
 
     String[] Drejtimi;
-    String[][] drejtimet;
     CheckBox matematike,fizike,biologji,gjuheshqipe,gjuheangleze,kimi;
     Button vazhdo;
     private DrawerLayout Drawer;
     private ActionBarDrawerToggle Toggle;
 
-//    public kyqu() {
-//        getDrejtimet();
-//    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getDrejtimet();
+//        getDrejtimet();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kyqu);
 
@@ -61,8 +56,9 @@ public class kyqu extends AppCompatActivity implements AdapterView.OnItemSelecte
        Drawer.addDrawerListener(Toggle);
         NavigationView Navigation = (NavigationView) findViewById(R.id.nv);
         Toggle.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        DrawerContent(Navigation);
+        Navigation.setNavigationItemSelectedListener(this);
+       // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+     //   DrawerContent(Navigation);
 
         //Creating the ArrayAdapter instance having the country list
         ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,Drejtimi);
@@ -70,6 +66,7 @@ public class kyqu extends AppCompatActivity implements AdapterView.OnItemSelecte
         //Setting the ArrayAdapter data on the Spinner
         spin.setAdapter(aa);
     }
+    /*
     public  void zgjedhAksionin (MenuItem menuItem) {
         android.support.v4.app.Fragment fragment = null;
          Class Klasa = null;
@@ -107,15 +104,15 @@ public class kyqu extends AppCompatActivity implements AdapterView.OnItemSelecte
                 return true;
             }
         });
-    }
-/*
+    }*/
+
     @Override
   public boolean onOptionsItemSelected(MenuItem item) {
         if (Toggle.onOptionsItemSelected(item)) {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    } */
+    }
 
     private void addListenerOnButtonClick()
     {
@@ -164,7 +161,26 @@ public class kyqu extends AppCompatActivity implements AdapterView.OnItemSelecte
         }
     }
 
-    private void getDrejtimet(){
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.Kryefaqja){
+            startActivity(new Intent(this, kyqu.class));
+        }
+        if (id == R.id.histroriku){
+            startActivity(new Intent(this, Historiku.class));
+        }
+        if (id == R.id.Location){
+            startActivity(new Intent(this, Rregullime.class));
+        }
+        if (id == R.id.Shkyqu){
+            startActivity(new Intent(this, Shkyqu.class));
+        }
+
+        return false;
+    }
+
+   /* private void getDrejtimet(){
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 Constants.URL_DREJTIMET, new Response.Listener<String>() {
 
@@ -175,7 +191,6 @@ public class kyqu extends AppCompatActivity implements AdapterView.OnItemSelecte
                     JSONArray jsonArray = new JSONArray(response);
                     String[][] d = new String[jsonArray.length()][2];
                     String[] dd = new String[jsonArray.length()];
-
                     for(int i=0; i<jsonArray.length(); i++){
                         d[i][0]= (String) jsonArray.getJSONObject(i).get("id");
                         d[i][1]= (String) jsonArray.getJSONObject(i).get("drejtimi");
@@ -197,5 +212,5 @@ public class kyqu extends AppCompatActivity implements AdapterView.OnItemSelecte
         });
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
-    }
+    }*/
 }

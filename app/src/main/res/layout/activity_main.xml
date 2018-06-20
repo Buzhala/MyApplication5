@@ -38,7 +38,7 @@
         android:ems="10"
         android:hint="@string/Perdoruesi"
         android:inputType="textEmailAddress"
-        android:text="Perdoruesi" />
+        android:text="admin" />
 
     <EditText
         android:id="@+id/editFjalekalimi"
@@ -51,7 +51,7 @@
         android:ems="10"
         android:hint="@string/Fjalekalimi"
         android:inputType="textPassword"
-        android:text="@string/Fjalekalimi" />
+        android:text="admin" />
 
     <Button
         android:id="@+id/Kyqu"
@@ -62,6 +62,16 @@
         android:layout_marginBottom="173dp"
         android:hint="@string/Kyqu"
         android:text="Kyqu" />
+
+   <Button
+       android:id="@+id/Location"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_alignParentBottom="true"
+       android:layout_centerHorizontal="true"
+       android:layout_marginBottom="76dp"
+       android:hint="@string/Kyqu"
+       android:text="Location" />
 
     <TextView
         android:id="@+id/Regjistrohu"

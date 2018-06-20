@@ -4,8 +4,8 @@
         android:title="Kryefaqja"></item>
    <item  android:id="@+id/histroriku"
        android:title="Historiku"></item>
-    <item  android:id="@+id/Rregullime"
-        android:title="Rregullime"></item>
+    <item  android:id="@+id/Location"
+        android:title="Location"></item>
     <item  android:id="@+id/Shkyqu"
         android:title="Shkyqu"></item>
 </menu>

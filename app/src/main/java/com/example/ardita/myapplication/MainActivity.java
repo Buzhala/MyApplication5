@@ -29,7 +29,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-     private  Button Kyqu;
+     private  Button Kyqu, Location;
     private EditText editPerdoruesi, editFjalekalimi;
      private  TextView Regjistrohu;
      private ProgressDialog progressDialog;
@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         editPerdoruesi = (EditText) findViewById(R.id.editPerdoruesi);
         editFjalekalimi = (EditText) findViewById(R.id.editFjalekalimi);
         Kyqu = (Button) findViewById(R.id.Kyqu);
+        Location = (Button) findViewById(R.id.Location);
         Regjistrohu = (TextView) findViewById(R.id.Regjistrohu);
       //  toolbar = (Toolbar) findViewById(R.id.toolbar);
       // toolbar.setTitle("Test Mature");
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(" ju lutem prisni ...");
         Kyqu.setOnClickListener(this);
+        Location.setOnClickListener(this);
         Regjistrohu.setOnClickListener(this);
 
     }
@@ -115,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (view == Regjistrohu)
                 startActivity(new Intent(this, Regjistrohu.class));
 
-
+if (view == Location)
+    startActivity(new Intent(this, MapsActivity.class));
     }
 }
