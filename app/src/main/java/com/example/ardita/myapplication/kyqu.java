@@ -3,15 +3,24 @@ package com.example.ardita.myapplication;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.app.Activity;
 import android.support.v7.widget.Toolbar;
+import android.location.Location;
 import android.view.Menu;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.provider.Settings;
+import android.content.DialogInterface;
+import android.app.AlertDialog;
+import android.Manifest;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,44 +30,44 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.view.View.OnClickListener;
 import android.widget.*;
+public class kyqu extends AppCompatActivity implements AdapterView.OnItemSelectedListener, OnClickListener {
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-public class kyqu extends AppCompatActivity implements AdapterView.OnItemSelectedListener, OnClickListener, NavigationView.OnNavigationItemSelectedListener{
-
-    String[] Drejtimi;
+    String[] Drejtimi = { "Shkenca natyrore", "Shkenca shoqerore", "Mjeksia", "Shkolla teknike" };
     CheckBox matematike,fizike,biologji,gjuheshqipe,gjuheangleze,kimi;
     Button vazhdo;
-    private DrawerLayout Drawer;
+    Button Location;
+    private DrawerLayout drawer;
     private ActionBarDrawerToggle Toggle;
+    private static final int REQUEST_LOCATION = 1;
+    LocationManager locationManager;
+    String lattitude, longitude;
+    TextView textView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        getDrejtimet();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kyqu);
+
+
+        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+
 
         Spinner spin = (Spinner) findViewById(R.id.Spinner);
         spin.setOnItemSelectedListener(this);
         addListenerOnButtonClick();
+        textView = (TextView) findViewById(R.id.get_location);
+        Location = (Button)findViewById(R.id.Location);
         vazhdo.setOnClickListener(this);
-        Drawer = (DrawerLayout) findViewById(R.id.drawer);
-        Toggle = new ActionBarDrawerToggle(this, Drawer, R.string.Hape, R.string.Mbylle);
-       Drawer.addDrawerListener(Toggle);
+        Location.setOnClickListener(this);
+        drawer = (DrawerLayout) findViewById(R.id.drawer);
+        Toggle = new ActionBarDrawerToggle(this, drawer, R.string.Hape, R.string.Mbylle);
+        drawer.addDrawerListener(Toggle);
         NavigationView Navigation = (NavigationView) findViewById(R.id.nv);
         Toggle.syncState();
-        Navigation.setNavigationItemSelectedListener(this);
-       // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-     //   DrawerContent(Navigation);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        DrawerContent(Navigation);
+        //Navigation.setNavigationItemSelectedListener(this);
 
         //Creating the ArrayAdapter instance having the country list
         ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,Drejtimi);
@@ -66,34 +75,48 @@ public class kyqu extends AppCompatActivity implements AdapterView.OnItemSelecte
         //Setting the ArrayAdapter data on the Spinner
         spin.setAdapter(aa);
     }
-    /*
-    public  void zgjedhAksionin (MenuItem menuItem) {
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(Toggle.onOptionsItemSelected(item)){
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public  void zgjedhAksionin(MenuItem menuItem) {
+       // android.support.v4.app.Fragment fragment = null;
         android.support.v4.app.Fragment fragment = null;
-         Class Klasa = null;
+        Class fragmentClass;
         switch (menuItem.getItemId()) {
-            case R.id.histroriku:
-                Klasa = Historiku.class;
+            case R.id.Kryefaqja:
+                fragmentClass = kyqu.class;
                 break;
-            case R.id.Rregullime:
-                Klasa = Rregullime.class;
+            case R.id.histroriku:
+                fragmentClass = Historiku.class;
+                break;
+            case R.id.Location:
+                fragmentClass = Rregullime.class;
                 break;
             case R.id.Shkyqu:
-                Klasa = Shkyqu.class;
+                fragmentClass = Shkyqu.class;
                 break;
+                default:
+                     fragmentClass = kyqu.class;
 
         }
 
         try {
-            fragment = (android.support.v4.app.Fragment) Klasa.newInstance();
+            fragment = (android.support.v4.app.Fragment) fragmentClass.newInstance();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        android.support.v4.app.FragmentManager menaxher = getSupportFragmentManager();
-        menaxher.beginTransaction().replace(R.id.Frame, fragment).commit();
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.Frame,fragment).commit();
         menuItem.setChecked(true);
         setTitle(menuItem.getTitle());
-        Drawer.closeDrawers();
+        drawer.closeDrawers();
     }
     private void DrawerContent (NavigationView navigationView){
 
@@ -104,14 +127,6 @@ public class kyqu extends AppCompatActivity implements AdapterView.OnItemSelecte
                 return true;
             }
         });
-    }*/
-
-    @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-        if (Toggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private void addListenerOnButtonClick()
@@ -153,64 +168,93 @@ public class kyqu extends AppCompatActivity implements AdapterView.OnItemSelecte
 
     @Override
     public void onClick(View v) {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
+
+        } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            getLocation();
+        }
         switch (v.getId()) {
             case R.id.vazhdo:
 
                 startActivity(new Intent(this, info.class));
                 break;
         }
+
+
+
     }
 
-    @Override
+    private void buildAlertMessageNoGps() {
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Please Turn ON your GPS Connection")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+
+    private void getLocation() {
+        if (ActivityCompat.checkSelfPermission(kyqu.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
+                (kyqu.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(kyqu.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+
+        } else {
+            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+
+            if (location != null) {
+                double latti = location.getLatitude();
+                double longi = location.getLongitude();
+                lattitude = String.valueOf(latti);
+                longitude = String.valueOf(longi);
+
+                textView.setText("Your current location is"+ "\n" + "Lattitude = " + lattitude
+                        + "\n" + "Longitude = " + longitude);
+
+            }else{
+
+                Toast.makeText(this,"Unable to Trace your location",Toast.LENGTH_SHORT).show();
+
+            }
+        }
+
+    }
+
+ /*   @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.Kryefaqja){
             startActivity(new Intent(this, kyqu.class));
         }
         if (id == R.id.histroriku){
+
             startActivity(new Intent(this, Historiku.class));
         }
         if (id == R.id.Location){
-            startActivity(new Intent(this, Rregullime.class));
+
+            startActivity(new Intent(this, Location.class));
         }
         if (id == R.id.Shkyqu){
+
             startActivity(new Intent(this, Shkyqu.class));
         }
 
+
         return false;
-    }
-
-   /* private void getDrejtimet(){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                Constants.URL_DREJTIMET, new Response.Listener<String>() {
-
-            @Override
-            public void onResponse(String response) {
-                try {
-//                  JSONObject obj =  new JSONObject(response);
-                    JSONArray jsonArray = new JSONArray(response);
-                    String[][] d = new String[jsonArray.length()][2];
-                    String[] dd = new String[jsonArray.length()];
-                    for(int i=0; i<jsonArray.length(); i++){
-                        d[i][0]= (String) jsonArray.getJSONObject(i).get("id");
-                        d[i][1]= (String) jsonArray.getJSONObject(i).get("drejtimi");
-                        dd[i]= (String) jsonArray.getJSONObject(i).get("drejtimi");
-                    }
-                    Drejtimi=dd;
-                    drejtimet = d;
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        },
-        new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
-
-            }
-        });
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
     }*/
 }
